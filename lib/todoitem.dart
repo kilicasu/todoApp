@@ -7,8 +7,9 @@ import 'package:todo_app/model/todo.dart';
 //BUNU EKLEMEDİM CTODO[İNDEX]  HATASINI GİDERMEK İÇN TODOITEM WİDGETINA PROP EKLEYEREK YAPICAM   title tanımladim statefulwidgetına ve  onu todo[index]  yerine widget.title ile çağırarak hatayı giderdim.final ile değiştirilmemesini sağladım. ""  ile diğer hatayı giderdim
 //son olarak main darta gidip todoitem çağırıyorum return ile
 class TodoItem extends StatefulWidget {
-  const TodoItem({super.key, required this.task});
+  const TodoItem({super.key, required this.task, this.onChanged});
   final Todo task;
+  final void Function(bool)? onChanged;
   //required kısmını silip task ı ekledim  yukarıyı task ile bağladım.
   //sonra widget.title kısmını widget.task.title olarak değiştirdim.
   //const TodoItem({super.key , required this.title}); ile study lesson yazısını yazdırdım.
@@ -19,6 +20,7 @@ class TodoItem extends StatefulWidget {
 
 class _TodoItemState extends State<TodoItem> {
   bool isChecked = false;
+
   @override
   Widget build(BuildContext context) {
     return Card(
@@ -68,6 +70,7 @@ class _TodoItemState extends State<TodoItem> {
                     widget.task.completed = !widget.task.completed!;
                   },
                 );
+                widget.onChanged?.call(isChecked);
               },
             )
           ],

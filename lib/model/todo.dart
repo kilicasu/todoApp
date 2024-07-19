@@ -21,7 +21,7 @@ class Todo {
     //dynamic dğişken value değerinin tipi belli değil demek
     id = json["id"];
     todo = json["todo"];
-    completed = json["complleted"];
+    completed = json["completed"];
     userId = json["userId"];
   }
 

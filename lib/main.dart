@@ -1,7 +1,7 @@
 //import 'package:flutter/cupertino.dart';
 //import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:todo_app/screens/home.dart';
+import 'package:todo_app/screens/home/home_view.dart';
 //import 'package:flutter/services.dart';
 //import 'package:flutter/widgets.dart';
 //import 'package:hexcolor/hexcolor.dart';
