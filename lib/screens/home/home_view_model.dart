@@ -1,12 +1,16 @@
+import 'package:flutter/material.dart';
 import 'package:todo_app/service/todo_service.dart';
 
 import '../../model/todo.dart';
 
-final class HomeViewModel {
+final class HomeViewModel with ChangeNotifier {
   final TodoService _todoService = TodoService();
 
   List<Todo> todoList = [];
   List<Todo> completedList = [];
+
+  List<Todo> get TodoList => todoList;
+  List<Todo> get CompletedList => completedList;
 
   Future<void> init() async {
     await Future.wait(
@@ -16,8 +20,9 @@ final class HomeViewModel {
       ],
     );
 
-    print('todo length: ${todoList.length}');
-    print('completed length: ${completedList.length}');
+    notifyListeners();
+    //print('todo length: ${todoList.length}');
+    //print('completed length: ${completedList.length}');
   }
 
   Future<void> getUncompletedTodos() async {
@@ -34,5 +39,6 @@ final class HomeViewModel {
 
     todoList.removeWhere((element) => element.id == todo.id);
     completedList.add(todo);
+    notifyListeners();
   }
 }

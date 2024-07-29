@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hexcolor/hexcolor.dart';
+import 'package:provider/provider.dart';
 import 'package:todo_app/constants/color.dart';
 import 'package:todo_app/constants/tasktype.dart';
 import 'package:todo_app/core/extensions/string_extensions.dart';
@@ -14,7 +15,6 @@ import 'package:todo_app/todoitem.dart';
 //List<String> todo = ["Study Lesson", "Run5K", "GoTo Party"];
 //List<String> completed = ["Game Meet up", "Take Out Trash"];
 
-//todoitemdartta açık halleri
 List<String> header = ["June ", "My To Do List"];
 
 class HomeScreen extends StatefulWidget {
@@ -60,124 +60,127 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   void initState() {
     super.initState();
-    model = HomeViewModel();
 
     Future.microtask(() {
-      getTodos();
+      Provider.of<HomeViewModel>(context, listen: false).init();
     });
   }
 
-  Future<void> getTodos() async {
-    await model.init();
-    setState(() {});
-  }
+  // Future<void> getTodos() async {
+  //   await model.init();
+  //   setState(() {});
+  // }
 
   void addNewTask(Task newTask) {
     setState(() {
-      todo.add(newTask);
+      //todo.add(newTask); provider için
     });
-    //todo.add(newTask);
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: HexColor(backgroundColor),
-      body: Column(
-        children: [
-          //header
-          Container(
-            decoration: BoxDecoration(
-                color: Colors.purple,
-                image: DecorationImage(
-                  image: AssetImage("header".toJpg),
-                  fit: BoxFit.cover,
-                )),
-            width: MediaQuery.of(context).size.width,
-            height: MediaQuery.of(context).size.height / 3,
-            child: Column(
-              children: [
-                Expanded(
-                  child: ListView.builder(
-                    itemCount: header.length,
-                    itemBuilder: (context, index) {
-                      return HeaderItem(task: todo[index]);
-                    },
-                  ),
+      body: Consumer<HomeViewModel>(
+        builder: (context, model, child) {
+          return Column(
+            children: [
+              //header
+              Container(
+                decoration: BoxDecoration(
+                    color: Colors.purple,
+                    image: DecorationImage(
+                      image: AssetImage("header".toJpg),
+                      fit: BoxFit.cover,
+                    )),
+                width: MediaQuery.of(context).size.width,
+                height: MediaQuery.of(context).size.height / 3,
+                child: Column(
+                  children: [
+                    Expanded(
+                      child: ListView.builder(
+                        itemCount: header.length,
+                        itemBuilder: (context, index) {
+                          return HeaderItem(task: todo[index]);
+                        },
+                      ),
+                    ),
+                  ],
                 ),
-              ],
-            ),
-          ),
-          //Top Column
-          Expanded(
-            child: Padding(
-              padding: const EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 10.0),
-              child: SingleChildScrollView(
-                child: ListView.builder(
-                  primary: false,
-                  shrinkWrap: true,
-                  itemCount: model.todoList.length,
-                  itemBuilder: (context, index) {
-                    final item = model.todoList[index];
+              ),
+              //Top Column
+              Expanded(
+                child: Padding(
+                  padding: const EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 10.0),
+                  child: SingleChildScrollView(
+                    child: ListView.builder(
+                      primary: false,
+                      shrinkWrap: true,
+                      itemCount: model.todoList.length,
+                      itemBuilder: (context, index) {
+                        final item = model.todoList[index];
 
-                    return TodoItem(
-                      task: item,
-                      onChanged: (isCompleted) async {
-                        if (isCompleted) {
-                          await model.completedTodo(item);
-                          setState(() {});
-                        }
+                        return TodoItem(
+                          task: item,
+                          onChanged: (isCompleted) async {
+                            if (isCompleted) {
+                              await model.completedTodo(item);
+                              setState(() {});
+                            }
+                          },
+                        );
                       },
-                    );
-                  },
-                ),
-              ),
-            ),
-          ),
-
-          //completed text
-          const Padding(
-            padding: EdgeInsets.only(left: 20.0),
-            child: Align(
-              alignment: Alignment.centerLeft,
-              child: Text(
-                "Completed",
-                style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
-              ),
-            ),
-          ),
-          //bottom column
-          Expanded(
-            child: Padding(
-              padding: const EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 10.0),
-              child: SingleChildScrollView(
-                child: ListView.builder(
-                  primary: false,
-                  shrinkWrap: true,
-                  reverse: true,
-                  itemCount: model.completedList.length,
-                  itemBuilder: (context, index) {
-                    final item = model.completedList[index];
-                    return TodoItem(
-                      task: item,
-                    );
-                  },
-                ),
-              ),
-            ),
-          ),
-          ElevatedButton(
-              onPressed: () {
-                Navigator.of(context).push(
-                  MaterialPageRoute(
-                    builder: (context) => AddNewTaskScreen(
-                      addNewTask: (newTask) => addNewTask(newTask),
                     ),
                   ),
-                );
-              },
-              child: const Text("Add New Task"))
-        ],
+                ),
+              ),
+
+              //completed text
+              const Padding(
+                padding: EdgeInsets.only(left: 20.0),
+                child: Align(
+                  alignment: Alignment.centerLeft,
+                  child: Text(
+                    "Completed",
+                    style:
+                        TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
+                  ),
+                ),
+              ),
+              //bottom column
+              Expanded(
+                child: Padding(
+                  padding: const EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 10.0),
+                  child: SingleChildScrollView(
+                    child: ListView.builder(
+                      primary: false,
+                      shrinkWrap: true,
+                      reverse: true,
+                      itemCount: model.completedList.length,
+                      itemBuilder: (context, index) {
+                        final item = model.completedList[index];
+                        return TodoItem(
+                          task: item,
+                        );
+                      },
+                    ),
+                  ),
+                ),
+              ),
+              ElevatedButton(
+                  onPressed: () {
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (context) => AddNewTaskScreen(
+                          addNewTask: (newTask) => addNewTask(newTask),
+                        ),
+                      ),
+                    );
+                  },
+                  child: const Text("Add New Task"))
+            ],
+          );
+        },
       ),
     );
   }
