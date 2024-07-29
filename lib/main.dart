@@ -3,7 +3,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:todo_app/screens/home/home_view.dart';
-import 'package:todo_app/screens/home/home_view_model.dart';
+
+import 'screens/home/home_view_model.dart';
 //import 'package:flutter/services.dart';
 //import 'package:flutter/widgets.dart';
 //import 'package:hexcolor/hexcolor.dart';

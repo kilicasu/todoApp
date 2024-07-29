@@ -1,7 +1,6 @@
 import 'dart:convert';
 
 import 'package:http/http.dart' as http;
-
 import 'package:todo_app/model/todo.dart';
 
 class TodoService {
@@ -52,7 +51,7 @@ class TodoService {
     print(response.body);
   }
 
-  Future<String> addTodo(Todo newTodo) async {
+  Future<Todo> addTodo(Todo newTodo) async {
     final response = await http.post(
       Uri.parse(addUrl),
       headers: <String, String>{
@@ -62,6 +61,6 @@ class TodoService {
     );
     print(response.body);
 
-    return response.body;
+    return Todo.fromJson(jsonDecode(response.body));
   }
 }

@@ -116,6 +116,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     child: ListView.builder(
                       primary: false,
                       shrinkWrap: true,
+                      reverse: true,
                       itemCount: model.todoList.length,
                       itemBuilder: (context, index) {
                         final item = model.todoList[index];

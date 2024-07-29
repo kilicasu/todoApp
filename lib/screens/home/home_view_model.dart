@@ -6,11 +6,11 @@ import '../../model/todo.dart';
 final class HomeViewModel with ChangeNotifier {
   final TodoService _todoService = TodoService();
 
-  List<Todo> todoList = [];
-  List<Todo> completedList = [];
+  List<Todo> _todoList = [];
+  List<Todo> _completedList = [];
 
-  List<Todo> get TodoList => todoList;
-  List<Todo> get CompletedList => completedList;
+  List<Todo> get todoList => _todoList;
+  List<Todo> get completedList => _completedList;
 
   Future<void> init() async {
     await Future.wait(
@@ -26,11 +26,11 @@ final class HomeViewModel with ChangeNotifier {
   }
 
   Future<void> getUncompletedTodos() async {
-    todoList = await _todoService.getUncompletedTodos();
+    _todoList = await _todoService.getUncompletedTodos();
   }
 
   Future<void> getCompletedTodos() async {
-    completedList = await _todoService.getCompletedTodos();
+    _completedList = await _todoService.getCompletedTodos();
   }
 
   Future<void> completedTodo(Todo todo) async {
@@ -40,5 +40,19 @@ final class HomeViewModel with ChangeNotifier {
     todoList.removeWhere((element) => element.id == todo.id);
     completedList.add(todo);
     notifyListeners();
+  }
+
+  Future<bool> saveTodo(String todoText, String userId) async {
+    Todo newTodo = Todo(
+      id: -1,
+      todo: todoText,
+      completed: false,
+      userId: int.tryParse(userId),
+    );
+    final result = await _todoService.addTodo(newTodo);
+
+    _todoList.add(result);
+    notifyListeners();
+    return true;
   }
 }

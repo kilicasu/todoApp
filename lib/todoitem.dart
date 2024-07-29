@@ -25,7 +25,7 @@ class _TodoItemState extends State<TodoItem> {
   Widget build(BuildContext context) {
     return Card(
       //kenarları yuvarlatma
-      color: widget.task.completed! ? Colors.grey : Colors.white,
+      color: (widget.task.completed ?? false) ? Colors.grey : Colors.white,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.0)),
       child: Padding(
         padding: const EdgeInsets.all(20.0),
@@ -47,15 +47,15 @@ class _TodoItemState extends State<TodoItem> {
               child: Column(
                 children: [
                   Text(
-                    widget.task.todo!,
+                    widget.task.todo ?? '',
                     style: TextStyle(
-                        decoration: widget.task.completed!
+                        decoration: (widget.task.completed ?? false)
                             ? TextDecoration.lineThrough
                             : TextDecoration.none,
                         fontWeight: FontWeight.bold,
                         fontSize: 20.0),
                   ),
-                  Text("User: ${widget.task.userId!}"),
+                  Text("User: ${widget.task.userId ?? '0'}"),
                 ],
               ),
             ),
