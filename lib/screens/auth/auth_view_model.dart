@@ -11,15 +11,24 @@ class AuthViewModel with ChangeNotifier {
 
   bool get isAuthenticated => user != null;
 
-  Future<void> login(String username, String password) async {
+  Future<void> login(String username, String password,
+      {required BuildContext context}) async {
     isLoading = true;
     notifyListeners();
 
-    final response = await _authService.login(username, password);
-    if (response != null) {
-      user = User.fromJson(response);
-    } else {
-      throw Exception("login failed");
+    try {
+      final response = await _authService.login(username, password);
+      if (response != null) {
+        user = User.fromJson(response);
+      } else {
+        throw Exception("login failed");
+      }
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(e.toString()),
+        ),
+      );
     }
 
     isLoading = false;
@@ -27,6 +36,7 @@ class AuthViewModel with ChangeNotifier {
   }
 
   Future<void> register(String firstname, String email, String password) async {
+    return;
     isLoading = true;
     notifyListeners();
 

@@ -34,14 +34,22 @@ class WaveClipper extends CustomClipper<Path> {
 }
 
 class _LoginPageState extends State<LoginView> {
-  final TextEditingController _firstnameController = TextEditingController();
-  final TextEditingController _usernameController = TextEditingController();
-  final TextEditingController _passwordController = TextEditingController();
-  final TextEditingController _confirmPasswordController =
-      TextEditingController();
-  final TextEditingController _emailController = TextEditingController();
+  late final TextEditingController _firstnameController;
+  late final TextEditingController _passwordController;
+  late final TextEditingController _confirmPasswordController;
+  late final TextEditingController _usernameController;
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+
   bool _isPasswordEntered = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _firstnameController = TextEditingController();
+    _passwordController = TextEditingController();
+    _confirmPasswordController = TextEditingController();
+    _usernameController = TextEditingController();
+  }
 
   @override
   void dispose() {
@@ -49,7 +57,6 @@ class _LoginPageState extends State<LoginView> {
     _passwordController.dispose();
     _confirmPasswordController.dispose();
     _usernameController.dispose();
-    _emailController.dispose();
     super.dispose();
   }
 
@@ -101,27 +108,11 @@ class _LoginPageState extends State<LoginView> {
                       ),
                       TextFormField(
                         controller: _usernameController,
-                        decoration: customInputDecoration("Name"),
-                        validator: (value) {
-                          if (value == null || value.isEmpty) {
-                            return 'Please enter a username ';
-                          }
-                          return null;
-                        },
-                      ),
-                      customSizedBox,
-                      TextFormField(
-                        controller: _emailController,
-                        decoration: customInputDecoration("Email Address "),
+                        decoration: customInputDecoration("Username"),
                         keyboardType: TextInputType.emailAddress,
                         validator: (value) {
                           if (value == null || value.isEmpty) {
-                            return "Please enter an email address";
-                          }
-                          String pattern = r'^[^@\s]+@[^@\s]+\.[^@\s]+$';
-                          RegExp regex = RegExp(pattern);
-                          if (!regex.hasMatch(value)) {
-                            return "Please enter a valid email address";
+                            return 'Please enter a username ';
                           }
                           return null;
                         },
@@ -147,22 +138,6 @@ class _LoginPageState extends State<LoginView> {
                         },
                       ),
                       customSizedBox,
-                      if (_isPasswordEntered)
-                        TextFormField(
-                          controller: _confirmPasswordController,
-                          decoration: customInputDecoration("Confirm Password"),
-                          obscureText: true,
-                          validator: (value) {
-                            if (value == null || value.isEmpty) {
-                              return "Please confirm your password";
-                            }
-                            if (value != _passwordController.text) {
-                              return "Passwords do not match";
-                            }
-                            return null;
-                          },
-                        ),
-                      customSizedBox,
                       Consumer<AuthViewModel>(
                         builder: (context, authViewModel, child) {
                           return Column(children: [
@@ -171,11 +146,14 @@ class _LoginPageState extends State<LoginView> {
                             if (!authViewModel.isLoading)
                               TextButton(
                                 onPressed: () async {
+                                  FocusScope.of(context).unfocus();
+
                                   if (_formKey.currentState?.validate() ??
                                       false) {
                                     await authViewModel.login(
                                       _usernameController.text,
                                       _passwordController.text,
+                                      context: context,
                                     );
                                     if (authViewModel.isAuthenticated) {
                                       Navigator.pushNamed(

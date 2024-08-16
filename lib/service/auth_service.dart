@@ -1,10 +1,11 @@
 import 'dart:convert';
+
 import 'package:http/http.dart' as http;
 //import 'package:todo_app/model/user.dart';
 
 class AuthService {
   final String logInurl = "https://dummyjson.com/auth/login";
-  final String registerUrl = "https://dummyjson.com/users/1";
+  final String registerUrl = "https://dummyjson.com/users/add";
 
   Future<Map<String, dynamic>?> login(
     String username,
