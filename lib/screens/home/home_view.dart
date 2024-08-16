@@ -97,6 +97,21 @@ class _HomeScreenState extends State<HomeScreen> {
                 height: MediaQuery.of(context).size.height / 3,
                 child: Column(
                   children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        IconButton(
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                          },
+                          icon: const Icon(
+                            Icons.close,
+                            size: 40.0,
+                            color: Colors.white,
+                          ),
+                        ),
+                      ],
+                    ),
                     Expanded(
                       child: ListView.builder(
                         itemCount: header.length,

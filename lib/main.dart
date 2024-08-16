@@ -2,6 +2,9 @@
 //import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:todo_app/screens/auth/auth_view_model.dart';
+import 'package:todo_app/screens/auth/login_view.dart';
+import 'package:todo_app/screens/auth/register_view.dart';
 import 'package:todo_app/screens/home/home_view.dart';
 
 import 'screens/home/home_view_model.dart';
@@ -25,10 +28,16 @@ class MyApp extends StatelessWidget {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (_) => HomeViewModel()),
+        ChangeNotifierProvider(create: (_) => AuthViewModel()),
       ],
-      child: const MaterialApp(
+      child: MaterialApp(
         debugShowCheckedModeBanner: false,
-        home: HomeScreen(),
+        routes: {
+          "/loginPage": (context) => const LoginView(),
+          "/registerPage": (context) => const RegisterView(),
+          "/homeScreen": (context) => const HomeScreen(),
+        },
+        home: const LoginView(),
       ),
     );
   }
